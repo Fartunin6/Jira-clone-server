@@ -5,7 +5,7 @@ exports.SIGN_UP = {
 };
 
 exports.ACCOUNT_ACTIVATION = {
-  LINK_ERROR_MESSAGE: 'Expired link. Signup again',
+  LINK_ERROR_MESSAGE: 'Expired link. Sign up again',
   SAVE_ERROR_MESSAGE: 'Error saving user in database. Try signup again',
   UNEXPECTED_ERROR_MESSAGE: 'Something went wrong. Try again',
   SUCCESSFUL_MESSAGE: 'User is saved successfully',
