@@ -8,7 +8,7 @@ const User = require('../models/User');
 const { accountActivation } = require('../templates/accountActivation');
 
 // import snippsets
-const { SIGN_UP, ACCOUNT_ACTIVATION, SIGN_IN } = require('../snippets');
+const { SIGN_UP, ACCOUNT_ACTIVATION, SIGN_IN } = require('../snippets/auth');
 
 exports.signup = (request, response) => {
   const { name, email, password } = request.body;
@@ -80,6 +80,7 @@ exports.accountActivation = (request, response) => {
 
 exports.signin = (request, response) => {
   const { email, password } = request.body;
+
   User.findOne({ email }).exec((err, user) => {
     if (err || !user) {
       return response.status(400).json({
