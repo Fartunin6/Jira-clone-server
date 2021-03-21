@@ -9,6 +9,10 @@ require('dotenv').config();
 // import routes
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');
+const boardRoutes = require('./routes/board.route');
+
+// import middlewares
+const authMiddleware = require('./middlewares/authMiddleware');
 
 const app = express();
 
@@ -34,16 +38,11 @@ if (process.env.NODE_ENV === 'development') {
 // middleware
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/board', authMiddleware, boardRoutes);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.info(`API is running on port ${port}`);
 });
 
-// вынести все ответы response в отдельные константы.Пример:
-// const signUp = {
-//   completed: 'User registered',
-//   error: 'User did not registered successfuly'
-//}
-
-// а так же сделать начальную верстку страниц (регистрации. подтверждения e-mail. логина и т.д.)
+// вынести все ответы response в отдельные константы
