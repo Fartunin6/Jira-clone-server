@@ -1,21 +1,29 @@
 const Board = require('../models/Board');
 
+const getAllBoards = (userId) => {
+  return Board.find({ userId })
+    .exec()
+    .then((boards) => boards);
+};
+
 exports.createBoard = (request, response) => {
-  const { userId, title, description } = request.body;
+  const { userId } = request;
+  const { title, description, background } = request.body;
 
-  const board = new Board({ title, description, userId });
+  const board = new Board({ title, description, userId, background });
 
-  board.save((error, board) => {
+  board.save(async (error, board) => {
     if (error || !board) {
-      console.error(error);
       return response.status(400).json({
         error: 'Creating a new board is failed',
       });
     }
 
+    const boards = await getAllBoards(userId).then((boards) => boards);
+
     return response.status(200).json({
       message: 'Board created successfuly',
-      board,
+      boards,
     });
   });
 };
@@ -53,17 +61,21 @@ exports.getBoardById = (request, response) => {
 };
 
 exports.deleteBoardById = (request, response) => {
+  const { userId } = request;
   const { id } = request.query;
 
-  Board.deleteOne({ _id: id }).exec((error, board) => {
+  Board.deleteOne({ _id: id }).exec(async (error, board) => {
     if (error) {
       return response.status(400).json({
         error: 'deleting board is failed',
       });
     }
 
+    const boards = await getAllBoards(userId).then((boards) => boards);
+
     return response.status(200).json({
-      message: 'board deleted successfuly',
+      message: 'Board deleted successfuly',
+      boards,
     });
   });
 };

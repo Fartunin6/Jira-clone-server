@@ -15,6 +15,10 @@ const BoardSchema = new mongoose.Schema({
     required: true,
     max: 100,
   },
+  background: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Board', BoardSchema);
