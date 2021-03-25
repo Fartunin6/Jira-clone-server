@@ -1,9 +1,15 @@
 const Board = require('../models/Board');
+const { CREATE_BOARD, GET_BOARD, GET_BOARDS, DELETE_BOARD } = require('../snippets/board');
 
 const getAllBoards = (userId) => {
   return Board.find({ userId })
     .exec()
-    .then((boards) => boards);
+    .then((boards) => boards)
+    .catch(() =>
+      response.status(400).json({
+        error: GET_BOARDS.ERROR_MESSAGE,
+      }),
+    );
 };
 
 exports.createBoard = (request, response) => {
@@ -15,14 +21,14 @@ exports.createBoard = (request, response) => {
   board.save(async (error, board) => {
     if (error || !board) {
       return response.status(400).json({
-        error: 'Creating a new board is failed',
+        error: CREATE_BOARD.ERROR_MESSAGE,
       });
     }
 
     const boards = await getAllBoards(userId).then((boards) => boards);
 
     return response.status(200).json({
-      message: 'Board created successfuly',
+      message: CREATE_BOARD.SUCCESSFUL_MESSAGE,
       boards,
     });
   });
@@ -34,7 +40,7 @@ exports.getBoards = (request, response) => {
   Board.find({ userId }).exec((error, boards) => {
     if (error || !boards) {
       return response.status(400).json({
-        error: 'finding boards is failed',
+        error: GET_BOARDS.ERROR_MESSAGE,
       });
     }
 
@@ -50,7 +56,7 @@ exports.getBoardById = (request, response) => {
   Board.findOne({ _id: id }).exec((error, board) => {
     if (error || !board) {
       return response.status(400).json({
-        error: 'finding board is failed',
+        error: GET_BOARD.ERROR_MESSAGE,
       });
     }
 
@@ -67,14 +73,14 @@ exports.deleteBoardById = (request, response) => {
   Board.deleteOne({ _id: id }).exec(async (error, board) => {
     if (error) {
       return response.status(400).json({
-        error: 'deleting board is failed',
+        error: DELETE_BOARD.ERROR_MESSAGE,
       });
     }
 
     const boards = await getAllBoards(userId).then((boards) => boards);
 
     return response.status(200).json({
-      message: 'Board deleted successfuly',
+      message: DELETE_BOARD.SUCCESSFUL_MESSAGE,
       boards,
     });
   });
