@@ -15,5 +15,3 @@ exports.DELETE_BOARD = {
   ERROR_MESSAGE: 'Deleting board is failed',
   SUCCESSFUL_MESSAGE: 'Board deleted successfuly',
 };
-
-exports.GET_ALL_BOARDS;

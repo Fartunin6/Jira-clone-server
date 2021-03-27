@@ -85,3 +85,22 @@ exports.deleteBoardById = (request, response) => {
     });
   });
 };
+
+exports.updateBoard = (request, response) => {
+  const { userId } = request;
+  const { id, newFields } = request.body;
+
+  Board.updateOne({ _id: id }, newFields, async (error, result) => {
+    if (error || !result) {
+      return response.status(400).json({
+        error: 'Updating board is failed',
+      });
+    }
+
+    const boards = await getAllBoards(userId).then((boards) => boards);
+
+    return response.status(200).json({
+      boards,
+    });
+  });
+};

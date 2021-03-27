@@ -19,6 +19,11 @@ const BoardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isSaved: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model('Board', BoardSchema);
