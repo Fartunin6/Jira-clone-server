@@ -1,6 +1,7 @@
 const express = require('express');
 const {
   createBoard,
+  getUserBoards,
   getBoards,
   getBoardById,
   deleteBoardById,
@@ -13,6 +14,7 @@ const { runValidation } = require('../validators');
 const router = express.Router();
 
 router.post('/', createBoardValidator, runValidation, createBoard);
+router.get('/user-boards', getUserBoards);
 router.get('/all', getBoards);
 router.get('/', getBoardById);
 router.get('/delete', deleteBoardById);

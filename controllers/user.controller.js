@@ -1,3 +1,4 @@
+const { response } = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { USER } = require('../snippets/user');
@@ -34,4 +35,23 @@ exports.getMe = (request, response) => {
       error: USER.UNEXPECTED_ERROR_MESSAGE,
     });
   }
+};
+
+exports.getAllUsers = (request, response) => {
+  User.find().exec((error, users) => {
+    if (error || !users) {
+      return response.status(500).json({
+        error: 'Finding all users is failed',
+      });
+    }
+
+    return response.status(200).json({
+      data: users.map((user) => ({
+        name: user.name,
+        email: user.email,
+        id: user._id,
+      })),
+      total: users.length,
+    });
+  });
 };

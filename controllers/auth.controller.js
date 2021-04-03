@@ -38,7 +38,7 @@ exports.signup = (request, response) => {
       (error) => {
         console.error(error);
         return response.status(error.status).json({
-          message: error.message,
+          error: error.message,
         });
       },
     );

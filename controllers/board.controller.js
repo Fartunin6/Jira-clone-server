@@ -35,6 +35,21 @@ exports.createBoard = (request, response) => {
 };
 
 exports.getBoards = (request, response) => {
+  Board.find().exec((error, boards) => {
+    if (error || !boards) {
+      return response.status(500).json({
+        error: 'Finding all boards is failed',
+      });
+    }
+
+    return response.status(200).json({
+      data: boards.map((board) => ({ id: board._id, ...board._doc })),
+      total: boards.length,
+    });
+  });
+};
+
+exports.getUserBoards = (request, response) => {
   const { userId } = request;
 
   Board.find({ userId }).exec((error, boards) => {

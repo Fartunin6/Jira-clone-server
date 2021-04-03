@@ -32,7 +32,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(cors({ origin: 'http://localhost:3000' }));
+  app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:3001'] }));
 }
 
 // middleware
