@@ -29,7 +29,7 @@ exports.createBoard = (request, response) => {
 
     return response.status(200).json({
       message: CREATE_BOARD.SUCCESSFUL_MESSAGE,
-      boards,
+      data: boards,
     });
   });
 };
@@ -60,7 +60,7 @@ exports.getUserBoards = (request, response) => {
     }
 
     return response.status(200).json({
-      boards,
+      data: boards,
     });
   });
 };
@@ -76,7 +76,7 @@ exports.getBoardById = (request, response) => {
     }
 
     return response.status(200).json({
-      board,
+      data: board,
     });
   });
 };
@@ -96,7 +96,7 @@ exports.deleteBoardById = (request, response) => {
 
     return response.status(200).json({
       message: DELETE_BOARD.SUCCESSFUL_MESSAGE,
-      boards,
+      data: boards,
     });
   });
 };
@@ -106,6 +106,7 @@ exports.updateBoard = (request, response) => {
   const { id, newFields } = request.body;
 
   Board.updateOne({ _id: id }, newFields, async (error, result) => {
+    console.log(result);
     if (error || !result) {
       return response.status(400).json({
         error: 'Updating board is failed',
@@ -115,7 +116,7 @@ exports.updateBoard = (request, response) => {
     const boards = await getAllBoards(userId).then((boards) => boards);
 
     return response.status(200).json({
-      boards,
+      data: boards,
     });
   });
 };
