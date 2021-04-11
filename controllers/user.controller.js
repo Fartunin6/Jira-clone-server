@@ -1,4 +1,5 @@
 const { response } = require('express');
+const querystring = require('querystring');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { USER } = require('../snippets/user');
@@ -37,6 +38,25 @@ exports.getMe = (request, response) => {
   }
 };
 
+exports.getUsersByIds = (request, response) => {
+  const { ids } = JSON.parse(request.query.filter);
+
+  User.find()
+    .where('_id')
+    .in(ids)
+    .exec((error, users) => {
+      if (error || !users) {
+        return response.status(400).json({
+          error: 'Finding user by id is failed',
+        });
+      }
+
+      return response.status(200).json({
+        data: users.map((user) => ({ id: user._id, ...user._doc })),
+      });
+    });
+};
+
 exports.getAllUsers = (request, response) => {
   User.find().exec((error, users) => {
     if (error || !users) {
@@ -52,6 +72,22 @@ exports.getAllUsers = (request, response) => {
         id: user._id,
       })),
       total: users.length,
+    });
+  });
+};
+
+exports.deleteUserById = (request, response) => {
+  const { id } = request.query;
+
+  User.deleteOne({ _id: id }).exec(async (error, user) => {
+    if (error) {
+      return response.status(400).json({
+        error: DELETE_BOARD.ERROR_MESSAGE,
+      });
+    }
+
+    return response.status(200).json({
+      data: user,
     });
   });
 };

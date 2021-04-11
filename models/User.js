@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const Board = require('../models/Board');
 
 const userSchema = new mongoose.Schema(
   {
@@ -65,5 +66,11 @@ userSchema.methods = {
     return this.encryptPassword(plainPassword) === this.hashed_password;
   },
 };
+
+// pre middlewares
+userSchema.pre('remove', function (next) {
+  this.model('Board').remove({ userId: this._id }, next);
+  next();
+});
 
 module.exports = mongoose.model('User', userSchema);

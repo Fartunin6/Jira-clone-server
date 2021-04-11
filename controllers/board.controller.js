@@ -1,6 +1,15 @@
 const Board = require('../models/Board');
 const { CREATE_BOARD, GET_BOARD, GET_BOARDS, DELETE_BOARD } = require('../snippets/board');
 
+// перенести бекграунды в отдельную таблицу
+
+// при удалении пользователя должны удаляться все связанные с ним таблицы
+// search by 'mongoose delete on cascade' 'mongoose foreign key'
+
+// в админке вынести отображения пользователя в отдельный UserTextField, который будет выводиться как user.name (user.email)
+// search by PurpleTextField in Field <copmonents>
+// может быть и не надо создавать кастомку, мб надо просто указать как-то два значения в source
+
 const getAllBoards = (userId) => {
   return Board.find({ userId })
     .exec()
@@ -14,9 +23,9 @@ const getAllBoards = (userId) => {
 
 exports.createBoard = (request, response) => {
   const { userId } = request;
-  const { title, description, background } = request.body;
+  const { title, description, background, userId: adminUserId } = request.body;
 
-  const board = new Board({ title, description, userId, background });
+  const board = new Board({ title, description, userId: adminUserId || userId, background });
 
   board.save(async (error, board) => {
     if (error || !board) {
@@ -25,11 +34,11 @@ exports.createBoard = (request, response) => {
       });
     }
 
-    const boards = await getAllBoards(userId).then((boards) => boards);
+    const boards = await getAllBoards(adminUserId || userId).then((boards) => boards);
 
     return response.status(200).json({
       message: CREATE_BOARD.SUCCESSFUL_MESSAGE,
-      data: boards,
+      data: boards.map((board) => ({ id: board._id, ...board._doc })),
     });
   });
 };
