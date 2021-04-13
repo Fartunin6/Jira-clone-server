@@ -3,13 +3,6 @@ const { CREATE_BOARD, GET_BOARD, GET_BOARDS, DELETE_BOARD } = require('../snippe
 
 // перенести бекграунды в отдельную таблицу
 
-// при удалении пользователя должны удаляться все связанные с ним таблицы
-// search by 'mongoose delete on cascade' 'mongoose foreign key'
-
-// в админке вынести отображения пользователя в отдельный UserTextField, который будет выводиться как user.name (user.email)
-// search by PurpleTextField in Field <copmonents>
-// может быть и не надо создавать кастомку, мб надо просто указать как-то два значения в source
-
 const getAllBoards = (userId) => {
   return Board.find({ userId })
     .exec()

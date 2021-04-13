@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const Board = require('../models/Board');
+const Board = require('./Board');
 
 const userSchema = new mongoose.Schema(
   {
@@ -68,8 +68,9 @@ userSchema.methods = {
 };
 
 // pre middlewares
-userSchema.pre('remove', function (next) {
-  this.model('Board').remove({ userId: this._id }, next);
+userSchema.pre('deleteOne', function (next) {
+  console.log(this._conditions._id);
+  Board.remove({ userId: this._conditions._id }).exec();
   next();
 });
 
