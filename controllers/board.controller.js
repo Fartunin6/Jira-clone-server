@@ -16,9 +16,9 @@ const getAllBoards = (userId) => {
 
 exports.createBoard = (request, response) => {
   const { userId } = request;
-  const { title, description, background, userId: adminUserId } = request.body;
+  const { title, description, backgroundId, userId: adminUserId } = request.body;
 
-  const board = new Board({ title, description, userId: adminUserId || userId, background });
+  const board = new Board({ title, description, userId: adminUserId || userId, backgroundId });
 
   board.save(async (error, board) => {
     if (error || !board) {

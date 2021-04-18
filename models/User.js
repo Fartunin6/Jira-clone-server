@@ -69,7 +69,6 @@ userSchema.methods = {
 
 // pre middlewares
 userSchema.pre('deleteOne', function (next) {
-  console.log(this._conditions._id);
   Board.remove({ userId: this._conditions._id }).exec();
   next();
 });

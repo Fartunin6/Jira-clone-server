@@ -16,8 +16,9 @@ const BoardSchema = new mongoose.Schema({
     required: true,
     max: 100,
   },
-  background: {
-    type: String,
+  backgroundId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Board_Background',
     required: true,
   },
   isSaved: {

@@ -10,6 +10,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');
 const boardRoutes = require('./routes/board.route');
+const backgroundRoutes = require('./routes/backgrounds.route');
 
 // import middlewares
 const authMiddleware = require('./middlewares/authMiddleware');
@@ -39,6 +40,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/board', authMiddleware, boardRoutes);
+app.use('/api/backgrounds', backgroundRoutes);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
