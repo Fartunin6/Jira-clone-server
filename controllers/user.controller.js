@@ -24,7 +24,7 @@ exports.getMe = (request, response) => {
 
         const { _id, name, email } = user;
         return response.status(200).json({
-          token: token,
+          token,
           user: { _id, name, email },
         });
       });

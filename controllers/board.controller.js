@@ -5,6 +5,7 @@ const { CREATE_BOARD, GET_BOARD, GET_BOARDS, DELETE_BOARD } = require('../snippe
 
 const getAllBoards = (userId) => {
   return Board.find({ userId })
+    .populate('background')
     .exec()
     .then((boards) => boards)
     .catch(() =>
@@ -16,9 +17,9 @@ const getAllBoards = (userId) => {
 
 exports.createBoard = (request, response) => {
   const { userId } = request;
-  const { title, description, backgroundId, userId: adminUserId } = request.body;
+  const { title, description, background, userId: adminUserId } = request.body;
 
-  const board = new Board({ title, description, userId: adminUserId || userId, backgroundId });
+  const board = new Board({ title, description, userId: adminUserId || userId, background });
 
   board.save(async (error, board) => {
     if (error || !board) {
@@ -54,17 +55,19 @@ exports.getBoards = (request, response) => {
 exports.getUserBoards = (request, response) => {
   const { userId } = request;
 
-  Board.find({ userId }).exec((error, boards) => {
-    if (error || !boards) {
-      return response.status(400).json({
-        error: GET_BOARDS.ERROR_MESSAGE,
-      });
-    }
+  Board.find({ userId })
+    .populate('background')
+    .exec((error, boards) => {
+      if (error || !boards) {
+        return response.status(400).json({
+          error: GET_BOARDS.ERROR_MESSAGE,
+        });
+      }
 
-    return response.status(200).json({
-      data: boards,
+      return response.status(200).json({
+        data: boards,
+      });
     });
-  });
 };
 
 exports.getBoardById = (request, response) => {
@@ -108,7 +111,6 @@ exports.updateBoard = (request, response) => {
   const { id, newFields } = request.body;
 
   Board.updateOne({ _id: id }, newFields, async (error, result) => {
-    console.log(result);
     if (error || !result) {
       return response.status(400).json({
         error: 'Updating board is failed',
@@ -118,7 +120,7 @@ exports.updateBoard = (request, response) => {
     const boards = await getAllBoards(userId).then((boards) => boards);
 
     return response.status(200).json({
-      data: boards,
+      data: boards.map((board) => ({ id: board._id, ...board._doc })),
     });
   });
 };

@@ -15,5 +15,5 @@ exports.createBoardValidator = [
     .isLength({ max: 100 })
     .withMessage('Description must be 100 characters long maximum'),
 
-  check('backgroundId').not().isEmpty().withMessage('Background is required'),
+  check('background').not().isEmpty().withMessage('Background is required'),
 ];
