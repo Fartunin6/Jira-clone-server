@@ -38,7 +38,9 @@ exports.createBoard = (request, response) => {
 };
 
 exports.getBoards = (request, response) => {
-  Board.find().exec((error, boards) => {
+  const filter = JSON.parse(request.query.filter);
+
+  Board.find(filter).exec((error, boards) => {
     if (error || !boards) {
       return response.status(500).json({
         error: 'Finding all boards is failed',
