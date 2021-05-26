@@ -1,8 +1,6 @@
 const Board = require('../models/Board');
 const { CREATE_BOARD, GET_BOARD, GET_BOARDS, DELETE_BOARD } = require('../snippets/board');
 
-// перенести бекграунды в отдельную таблицу
-
 const getAllBoards = (userId) => {
   return Board.find({ userId })
     .populate('background')
@@ -39,19 +37,22 @@ exports.createBoard = (request, response) => {
 
 exports.getBoards = (request, response) => {
   const filter = JSON.parse(request.query.filter);
+  const { field, order } = JSON.parse(request.query.sort);
 
-  Board.find(filter).exec((error, boards) => {
-    if (error || !boards) {
-      return response.status(500).json({
-        error: 'Finding all boards is failed',
+  Board.find(filter)
+    .sort({ [field]: order })
+    .exec((error, boards) => {
+      if (error || !boards) {
+        return response.status(500).json({
+          error: 'Finding all boards is failed',
+        });
+      }
+
+      return response.status(200).json({
+        data: boards.map((board) => ({ id: board._id, ...board._doc })),
+        total: boards.length,
       });
-    }
-
-    return response.status(200).json({
-      data: boards.map((board) => ({ id: board._id, ...board._doc })),
-      total: boards.length,
     });
-  });
 };
 
 exports.getUserBoards = (request, response) => {
@@ -75,17 +76,19 @@ exports.getUserBoards = (request, response) => {
 exports.getBoardById = (request, response) => {
   const { id } = request.query;
 
-  Board.findOne({ _id: id }).exec((error, board) => {
-    if (error || !board) {
-      return response.status(400).json({
-        error: GET_BOARD.ERROR_MESSAGE,
-      });
-    }
+  Board.findOne({ _id: id })
+    .populate('background')
+    .exec((error, board) => {
+      if (error || !board) {
+        return response.status(400).json({
+          error: GET_BOARD.ERROR_MESSAGE,
+        });
+      }
 
-    return response.status(200).json({
-      data: board,
+      return response.status(200).json({
+        data: board,
+      });
     });
-  });
 };
 
 exports.deleteBoardById = (request, response) => {
